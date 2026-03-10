@@ -1,0 +1,13 @@
+{
+  "name": "kico-blog-2-handin",
+  "version": "1.0.0",
+  "description": "Personal blog and art expo with Express routing",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
