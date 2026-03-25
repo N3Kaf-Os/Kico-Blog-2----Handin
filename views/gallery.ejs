@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head', { pageTitle: 'Gallery' }) %>
+  </head>
+  <body>
+    <div class="page">
+      <%- include('partials/sidebar', { currentPage: 'gallery' }) %>
+
+      <main class="main">
+        <div class="container">
+          <section class="card">
+            <h2>Gallery</h2>
+            <p>Artworks with short text. I'll replace images later with my own art.</p>
+          </section>
+
+          <% if (artworks.length === 0) { %>
+            <section class="card">
+              <p class="muted">No artworks yet. <a href="/admin/new">Add one</a>.</p>
+            </section>
+          <% } %>
+
+          <% artworks.forEach(function(artwork) { %>
+            <article class="card">
+              <h3><a href="/art/<%= artwork.slug %>"><%= artwork.title %></a></h3>
+              <p class="meta">
+                Date: <%= artwork.artDate.toISOString().slice(0, 10) %> &bull;
+                Medium: <%= artwork.medium %>
+              </p>
+              <img class="art" src="<%= artwork.imageUrl %>" alt="<%= artwork.title %>" />
+              <p><%= artwork.description %></p>
+            </article>
+          <% }) %>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

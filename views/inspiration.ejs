@@ -1,40 +1,17 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kico Blog — Inspiration</title>
-    <link rel="stylesheet" href="styles.css" />
+    <%- include('partials/head', { pageTitle: 'Inspiration' }) %>
   </head>
-
   <body>
     <div class="page">
-      <header class="sidebar">
-        <h1 class="brand">Kico Blog</h1>
-        <p class="tagline">Personal blog + art expo</p>
-
-        <hr />
-
-        <p><strong>Pages</strong></p>
-        <ul class="nav">
-          <li><a href="/">Home</a></li>
-          <li><a href="/gallery">Gallery</a></li>
-          <li><a href="/inspiration">Inspiration</a></li>
-          <li><a href="/about">About</a></li>
-        </ul>
-
-        <hr />
-        <p class="small">Bonus later: e-commerce (Stripe / Printify / Etsy)</p>
-      </header>
+      <%- include('partials/sidebar', { currentPage: 'inspiration' }) %>
 
       <main class="main">
         <div class="container">
           <section class="card">
             <h2>Inspiration</h2>
-            <p>
-              A moodboard page for references. I’ll replace these with my own
-              art later.
-            </p>
+            <p>A moodboard page for references. I'll replace these with my own art later.</p>
           </section>
 
           <section class="card">

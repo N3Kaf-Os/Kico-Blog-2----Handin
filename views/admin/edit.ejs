@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head', { pageTitle: 'Edit — ' + artwork.title }) %>
+  </head>
+  <body>
+    <div class="page">
+      <%- include('../partials/sidebar', { currentPage: '' }) %>
+
+      <main class="main">
+        <div class="container">
+          <section class="card">
+            <h2>Edit: <%= artwork.title %></h2>
+            <form action="/admin/<%= artwork._id %>?_method=PUT" method="POST" class="artwork-form">
+              <label>Title
+                <input type="text" name="title" value="<%= artwork.title %>" required />
+              </label>
+              <label>Slug <span class="meta">(URL-safe, e.g. hat-man)</span>
+                <input type="text" name="slug" value="<%= artwork.slug %>" required pattern="[a-z0-9\-]+" />
+              </label>
+              <label>Image URL
+                <input type="url" name="imageUrl" value="<%= artwork.imageUrl %>" required />
+              </label>
+              <label>Description
+                <textarea name="description" rows="4" required><%= artwork.description %></textarea>
+              </label>
+              <label>Medium
+                <select name="medium" required>
+                  <option value="Digital" <%= artwork.medium === 'Digital' ? 'selected' : '' %>>Digital</option>
+                  <option value="Analog" <%= artwork.medium === 'Analog' ? 'selected' : '' %>>Analog</option>
+                </select>
+              </label>
+              <label>Date
+                <input type="date" name="artDate" value="<%= artwork.artDate.toISOString().slice(0, 10) %>" required />
+              </label>
+              <div class="form-actions">
+                <button type="submit" class="btn">Update</button>
+                <a href="/admin" class="btn btn-ghost">Cancel</a>
+              </div>
+            </form>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

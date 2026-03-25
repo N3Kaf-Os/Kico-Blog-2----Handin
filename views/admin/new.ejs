@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head', { pageTitle: 'New Artwork' }) %>
+  </head>
+  <body>
+    <div class="page">
+      <%- include('../partials/sidebar', { currentPage: '' }) %>
+
+      <main class="main">
+        <div class="container">
+          <section class="card">
+            <h2>New Artwork</h2>
+            <form action="/admin" method="POST" class="artwork-form">
+              <label>Title
+                <input type="text" name="title" required />
+              </label>
+              <label>Slug <span class="meta">(URL-safe, e.g. hat-man)</span>
+                <input type="text" name="slug" required pattern="[a-z0-9\-]+" />
+              </label>
+              <label>Image URL
+                <input type="url" name="imageUrl" required />
+              </label>
+              <label>Description
+                <textarea name="description" rows="4" required></textarea>
+              </label>
+              <label>Medium
+                <select name="medium" required>
+                  <option value="Digital">Digital</option>
+                  <option value="Analog">Analog</option>
+                </select>
+              </label>
+              <label>Date
+                <input type="date" name="artDate" required />
+              </label>
+              <div class="form-actions">
+                <button type="submit" class="btn">Save</button>
+                <a href="/admin" class="btn btn-ghost">Cancel</a>
+              </div>
+            </form>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

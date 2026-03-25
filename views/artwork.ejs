@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head', { pageTitle: artwork.title }) %>
+  </head>
+  <body>
+    <div class="page">
+      <%- include('partials/sidebar', { currentPage: 'gallery' }) %>
+
+      <main class="main">
+        <div class="container">
+          <article class="card">
+            <h2><%= artwork.title %></h2>
+            <p class="meta">
+              Date: <%= artwork.artDate.toISOString().slice(0, 10) %> &bull;
+              Medium: <%= artwork.medium %>
+            </p>
+            <img class="art" src="<%= artwork.imageUrl %>" alt="<%= artwork.title %>" />
+            <p><%= artwork.description %></p>
+            <p><a href="/gallery">&larr; Back to gallery</a></p>
+          </article>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

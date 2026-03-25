@@ -1,0 +1,18 @@
+<header class="sidebar">
+  <h1 class="brand">Kico Blog</h1>
+  <p class="tagline">Personal blog + art expo</p>
+
+  <hr />
+
+  <p><strong>Pages</strong></p>
+  <ul class="nav">
+    <li><a href="/" <%= currentPage === 'home' ? 'aria-current="page"' : '' %>>Home</a></li>
+    <li><a href="/gallery" <%= currentPage === 'gallery' ? 'aria-current="page"' : '' %>>Gallery</a></li>
+    <li><a href="/inspiration" <%= currentPage === 'inspiration' ? 'aria-current="page"' : '' %>>Inspiration</a></li>
+    <li><a href="/about" <%= currentPage === 'about' ? 'aria-current="page"' : '' %>>About</a></li>
+  </ul>
+
+  <hr />
+  <p class="small">Bonus later: e-commerce (Stripe / Printify / Etsy)</p>
+  <a href="/admin" class="admin-link small">Admin</a>
+</header>

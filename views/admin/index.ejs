@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head', { pageTitle: 'Admin' }) %>
+  </head>
+  <body>
+    <div class="page">
+      <%- include('../partials/sidebar', { currentPage: '' }) %>
+
+      <main class="main">
+        <div class="container">
+          <section class="card">
+            <h2>Admin — Artworks</h2>
+            <a href="/admin/new" class="btn">+ New artwork</a>
+          </section>
+
+          <% if (artworks.length === 0) { %>
+            <section class="card">
+              <p class="muted">No artworks yet.</p>
+            </section>
+          <% } %>
+
+          <% artworks.forEach(function(artwork) { %>
+            <article class="card admin-row">
+              <div class="admin-info">
+                <strong><%= artwork.title %></strong>
+                <span class="meta"><%= artwork.medium %> &bull; <%= artwork.artDate.toISOString().slice(0, 10) %></span>
+              </div>
+              <div class="admin-actions">
+                <a href="/art/<%= artwork.slug %>" class="btn btn-ghost">View</a>
+                <a href="/admin/<%= artwork._id %>/edit" class="btn btn-ghost">Edit</a>
+                <form action="/admin/<%= artwork._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Delete <%= artwork.title %>?')">
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+              </div>
+            </article>
+          <% }) %>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
