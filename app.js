@@ -1,83 +1,103 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
+const mongoose = require("mongoose");
+const methodOverride = require("method-override");
+
+const Artwork = require("./models/Artwork");
 
 const app = express();
 const PORT = 3000;
+const MONGO_URI =
+  process.env.MONGO_URI || "mongodb://localhost:27017/kico-blog";
 
-// make the public folder available
+// Connect to MongoDB
+mongoose
+  .connect(MONGO_URI)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+// View engine
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+// Middleware
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
 
-// fixed routes
+// ── Public routes ────────────────────────────────────────────────
+
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "pages", "index.html"));
+  res.render("index");
 });
 
-app.get("/gallery", (req, res) => {
-  res.sendFile(path.join(__dirname, "pages", "gallery.html"));
+app.get("/gallery", async (req, res) => {
+  const artworks = await Artwork.find().sort({ artDate: -1 });
+  res.render("gallery", { artworks });
+});
+
+app.get("/art/:slug", async (req, res) => {
+  const artwork = await Artwork.findOne({ slug: req.params.slug });
+  if (!artwork) {
+    return res.status(404).render("404");
+  }
+  res.render("artwork", { artwork });
 });
 
 app.get("/inspiration", (req, res) => {
-  res.sendFile(path.join(__dirname, "pages", "inspiration.html"));
+  res.render("inspiration");
 });
 
 app.get("/about", (req, res) => {
-  res.sendFile(path.join(__dirname, "pages", "about.html"));
+  res.render("about");
 });
 
-// simple artwork data
-const artworks = {
-  "hat-man": {
-    title: "Hat Man",
-    image:
-      "https://i.pinimg.com/1200x/eb/fa/4a/ebfa4a4667230157177b24372eb94e22.jpg",
-    description:
-      "Black and white image of a man with a large hat and long coat.",
-  },
-  "grief-cigarette": {
-    title: "Grief Cigarette",
-    image:
-      "https://i.pinimg.com/736x/07/79/23/0779236e597bede424ff6425b69f600f.jpg",
-    description:
-      "Black and white portrait of a man holding a cigarette and looking anxious.",
-  },
-  "always-watching": {
-    title: "Always Watching",
-    image:
-      "https://i.pinimg.com/1200x/77/16/a7/7716a7c5bad51cbacf71bd55b53a1ace.jpg",
-    description: "Black and white street image with a feeling of surveillance.",
-  },
-};
+// ── Admin routes (CRUD) ──────────────────────────────────────────
 
-// dynamic route
-app.get("/art/:slug", (req, res) => {
-  const slug = req.params.slug;
-  const artwork = artworks[slug];
+app.get("/admin", async (req, res) => {
+  const artworks = await Artwork.find().sort({ artDate: -1 });
+  res.render("admin/index", { artworks });
+});
 
-  if (!artwork) {
-    return res
-      .status(404)
-      .send("<h1>Artwork not found</h1><a href='/gallery'>Back to gallery</a>");
-  }
+app.get("/admin/new", (req, res) => {
+  res.render("admin/new");
+});
 
-  res.send(`
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>${artwork.title}</title>
-      <link rel="stylesheet" href="/styles.css">
-    </head>
-    <body>
-      <main>
-        <h1>${artwork.title}</h1>
-        <img src="${artwork.image}" alt="${artwork.title}" style="max-width: 400px;">
-        <p>${artwork.description}</p>
-        <p><a href="/gallery">Back to gallery</a></p>
-      </main>
-    </body>
-    </html>
-  `);
+app.post("/admin", async (req, res) => {
+  const { title, slug, imageUrl, description, medium, artDate } = req.body;
+  await Artwork.create({ title, slug, imageUrl, description, medium, artDate });
+  res.redirect("/admin");
+});
+
+app.get("/admin/:id/edit", async (req, res) => {
+  const artwork = await Artwork.findById(req.params.id);
+  if (!artwork) return res.redirect("/admin");
+  res.render("admin/edit", { artwork });
+});
+
+app.put("/admin/:id", async (req, res) => {
+  const { title, slug, imageUrl, description, medium, artDate } = req.body;
+  await Artwork.findByIdAndUpdate(req.params.id, {
+    title,
+    slug,
+    imageUrl,
+    description,
+    medium,
+    artDate,
+  });
+  res.redirect("/admin");
+});
+
+app.delete("/admin/:id", async (req, res) => {
+  await Artwork.findByIdAndDelete(req.params.id);
+  res.redirect("/admin");
+});
+
+// ── 404 fallback ─────────────────────────────────────────────────
+
+app.use((req, res) => {
+  res.status(404).render("404");
 });
 
 app.listen(PORT, () => {
